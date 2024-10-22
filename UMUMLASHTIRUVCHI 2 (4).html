@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"TEMIRYO'LINFRATUZILMA" AJ 2024 YIL HARAJATLARI</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+        .total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body style="background-color: lightcyan;"
+
+<h1>"TEMIRYO'LINFRATUZILMA" AJ 2024 YIL 9 OYLIK HARAJATLARI</h1>
+
+<label for="filial">Filialni tanlang:</label>
+<select id="filial" onchange="updateUmumiyXarajatlar()">
+    <option value="Toshkent">Toshkent MТU</option>
+    <option value="Qo‘qon">Qo‘qon MТU</option>
+    <option value="Buxoro">Buxoro MТU</option>
+    <option value="Qung‘irot">Qung‘irot MТU</option>
+    <option value="Qarshi">Qarshi MТU</option>
+    <option value="Termiz">Termiz MТU</option>
+    <option value="PDM">PDM BUHORO</option>
+    <option value="ЦМД">ЦМД</option>
+    <option value="УПП">УПП</option>
+    <option value="МАРКАЗИЙ АППАРАТ">МАРКАЗИЙ АППАРАТ</option>
+</select>
+
+<h2>Xarajatlar</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Xarajat Nomi</th>
+            <th>Qiymat (ming so'm)</th>
+            <th>Foiz (%)</th>
+        </tr>
+    </thead>
+    <tbody id="xarajatlarTbody">
+        <tr>
+            <td>İSH HAQI</td>
+            <td><input type="number" class="xarajat" data-nom="İSH HAQI" oninput="calculateTotal()"></td>
+            <td><span class="foiz">0</span>%</td>
+        </tr>
+        <tr>
+            <td>IJTIMOIY TULOV</td>
+            <td><input type="number" class="xarajat" data-nom="IJTIMOIY TULOV" oninput="calculateTotal()"></td>
+            <td><span class="foiz">0</span>%</td>
+        </tr>
+        <tr>
+            <td>MATERIAL</td>
+            <td><input type="number" class="xarajat" data-nom="MATERIAL" oninput="calculateTotal()"></td>
+            <td><span class="foiz">0</span>%</td>
+        </tr>
+        <tr>
+            <td>YOQILG'I</td>
+            <td><input type="number" class="xarajat" data-nom="YOQILG'I" oninput="calculateTotal()"></td>
+            <td><span class="foiz">0</span>%</td>
+        </tr>
+        <tr>
+            <td>ELEKTR ENERGIYA</td>
+            <td><input type="number" class="xarajat" data-nom="ELEKTR ENERGIYA" oninput="calculateTotal()"></td>
+            <td><span class="foiz">0</span>%</td>
+        </tr>
+        <tr>
+            <td>AMORTIZASIYA</td>
+            <td><input type="number" class="xarajat" data-nom="AMORTIZASIYA" oninput="calculateTotal()"></td>
+            <td><span class="foiz">0</span>%</td>
+        </tr>
+        <tr>
+            <td>TA'MIRLASH FONDI</td>
+            <td><input type="number" class="xarajat" data-nom="TA'MIRLASH FONDI" oninput="calculateTotal()"></td>
+            <td><span class="foiz">0</span>%</td>
+        </tr>
+        <tr>
+            <td>BOSHQA HARAJAT</td>
+            <td><input type="number" class="xarajat" data-nom="BOSHQA HARAJAT" oninput="calculateTotal()"></td>
+            <td><span class="foiz">0</span>%</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="total">Umumiy Xarajat</td>
+            <td><span id="umumiyXarajat">0</span> ming so'm</td>
+            <td><span id="umumiyFoiz">100</span>%</td>
+        </tr>
+    </tfoot>
+</table>
+
+<h2>Umumiy Xarajatlar</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Xarajat Nomi</th>
+            <th>Toshkent</th>
+            <th>Qo‘qon</th>
+            <th>Buxoro</th>
+            <th>Qung‘irot</th>
+            <th>Qarshi</th>
+            <th>Termiz</th>
+            <th>PDM</th>
+            <th>ЦМД</th>
+            <th>УПП</th>
+            <th>МАРКАЗИЙ АППАРАТ</th>
+            <th>JAMI</th>
+        </tr>
+    </thead>
+    <tbody id="umumiyXarajatlarTbody"></tbody>
+    <tfoot>
+        <tr>
+            <td class="total">Umumiy Xarajatlar</td>
+            <td colspan="11" id="jamiXarajatlar">0</td>
+        </tr>
+    </tfoot>
+</table>
+
+<button onclick="confirmData()">Tasdiqlash</button>
+
+<script>
+let totalXarajatlar = {
+    "Toshkent": {},
+    "Qo‘qon": {},
+    "Buxoro": {},
+    "Qung‘irot": {},
+    "Qarshi": {},
+    "Termiz": {},
+    "PDM": {},
+    "ЦМД": {},
+    "УПП": {},
+    "МАРКАЗИЙ АППАРАТ": {}
+};
+
+let oldXarajatlar = {
+    "Toshkent": {},
+    "Qo‘qon": {},
+    "Buxoro": {},
+    "Qung‘irot": {},
+    "Qarshi": {},
+    "Termiz": {},
+    "PDM": {},
+    "ЦМД": {},
+    "УПП": {},
+    "МАРКАЗИЙ АППАРАТ": {}
+};
+
+function calculateTotal() {
+    let total = 0;
+    const xarajatInputs = document.querySelectorAll('.xarajat');
+    xarajatInputs.forEach(input => {
+        total += parseFloat(input.value) || 0;
+    });
+    document.getElementById('umumiyXarajat').innerText = total.toFixed(2);
+    updateFoizlar(total);
+    updateUmumiyXarajatlar();
+}
+
+function updateFoizlar(total) {
+    const xarajatInputs = document.querySelectorAll('.xarajat');
+    const foizElements = document.querySelectorAll('.foiz');
+
+    xarajatInputs.forEach((input, index) => {
+        const xarajatValue = parseFloat(input.value) || 0;
+        const foiz = total > 0 ? (xarajatValue / total) * 100 : 0;
+        foizElements[index].innerText = foiz.toFixed(2);
+    });
+}
+
+function updateUmumiyXarajatlar() {
+    const filial = document.getElementById('filial').value;
+
+    const xarajatInputs = document.querySelectorAll('.xarajat');
+    xarajatInputs.forEach(input => {
+        const xarajatNom = input.getAttribute('data-nom');
+        const xarajatValue = parseFloat(input.value) || 0;
+
+        if (!oldXarajatlar[filial][xarajatNom]) {
+            oldXarajatlar[filial][xarajatNom] = 0;
+        }
+        oldXarajatlar[filial][xarajatNom] += xarajatValue;
+
+        totalXarajatlar[filial][xarajatNom] = oldXarajatlar[filial][xarajatNom];
+    });
+
+    renderUmumiyXarajatlar();
+}
+
+function renderUmumiyXarajatlar() {
+    const tbody = document.getElementById('umumiyXarajatlarTbody');
+    tbody.innerHTML = '';
+
+    const xarajatNomlari = [
+        "İSH HAQI",
+        "IJTIMOIY TULOV",
+        "MATERIAL",
+        "YOQILG'I",
+        "ELEKTR ENERGIYA",
+        "AMORTIZASIYA",
+        "TA'MIRLASH FONDI",
+        "BOSHQA HARAJAT"
+    ];
+
+    let jamiXarajatlar = 0;
+
+    xarajatNomlari.forEach(nom => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${nom}</td>`;
+
+        let jamiXarajat = 0;
+
+        for (const filial in totalXarajatlar) {
+            const value = totalXarajatlar[filial][nom] || 0;
+            row.innerHTML += `<td>${value.toFixed(2)}</td>`;
+            jamiXarajat += value;
+        }
+
+        row.innerHTML += `<td>${jamiXarajat.toFixed(2)}</td>`;
+        tbody.appendChild(row);
+        jamiXarajatlar += jamiXarajat;
+    });
+
+    document.getElementById('jamiXarajatlar').innerText = jamiXarajatlar.toFixed(2);
+}
+
+function tahlilXarajatlar() {
+    const filial = document.getElementById('filial').value;
+    const xarajatInputs = document.querySelectorAll('.xarajat');
+    let tahlilNatijasi = '';
+
+    xarajatInputs.forEach(input => {
+        const xarajatNom = input.getAttribute('data-nom');
+        const yangiXarajat = parseFloat(input.value) || 0;
+        const eskiXarajat = oldXarajatlar[filial][xarajatNom] || 0;
+
+        if (yangiXarajat > eskiXarajat) {
+            tahlilNatijasi += `${xarajatNom}: O'sdi (${(yangiXarajat - eskiXarajat).toFixed(2)} ming so'm)\n`;
+        } else if (yangiXarajat < eskiXarajat) {
+            tahlilNatijasi += `${xarajatNom}: Kamaydi (${(eskiXarajat - yangiXarajat).toFixed(2)} ming so'm)\n`;
+        } else {
+            tahlilNatijasi += `${xarajatNom}: O'zgarmadi\n`;
+        }
+    });
+
+    alert(tahlilNatijasi);
+}
+
+function confirmData() {
+    if (confirm("Ma'lumotlarni tasdiqlaysizmi?")) {
+        updateUmumiyXarajatlar();
+        tahlilXarajatlar();
+    }
+}
+</script>
+
+</body>
+</html>
